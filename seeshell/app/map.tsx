@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import { MapView, Marker } from 'react-native-maps';
 import mapStyle from './mapStyle.json';
 
 const Map = () => {
