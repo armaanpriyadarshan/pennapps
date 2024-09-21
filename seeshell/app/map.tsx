@@ -1,12 +1,13 @@
 import { StyleSheet, View } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import mapStyle from './mapStyle.json';
 
 const Map = () => {
   return (
     <View style={styles.container}>
       <MapView 
-        style={styles.map} 
+        style={styles.map}
+        provider={PROVIDER_GOOGLE} 
         customMapStyle={mapStyle} 
         region={{
           latitude: 43,
