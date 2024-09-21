@@ -23,6 +23,7 @@ const Index = () => {
           borderRadius: 60,
           margin: 5,
         },
+        headerShown: false,
         tabBarActiveBackgroundColor: '#071A2B',
         tabBarShowLabel: false
       }}
