@@ -6,16 +6,22 @@ const Map = () => {
   return (
     <View style={styles.container}>
       <MapView 
-        style={styles.map}
-        provider={PROVIDER_GOOGLE} 
+        style={styles.map} 
         customMapStyle={mapStyle} 
         region={{
           latitude: 43,
           longitude: -72,
           latitudeDelta: 10,
           longitudeDelta: 10
-        }}
-      />
+        }}>
+          <Marker
+          coordinate={{
+            latitude: 41.6688,
+            longitude: 70.2962  
+          }}
+          pinColor='#ffffff'>
+        </Marker>
+        </MapView>
     </View>
   );
 }
