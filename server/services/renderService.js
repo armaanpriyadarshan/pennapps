@@ -1,49 +1,22 @@
 const path = require("path");
+const fileService = require("./fileService");
 
+const renderTintedShells = async (shell, color) => {
+  const icon = await fileService.getFile("/shells/icons/default_" + shell + ".png");
+  const model = await fileService.getFile("/shells/models/default_" + shell + "_spin.gif");
 
+  const icon_tinted = await tintMedia(color, icon);
+  const model_tinted = await tintMedia(color, model);
+  
 
-const getStorageRootPath = () => {
-  return path.join(__dirname, "../storage");
 }
 
-const getTempStoragePath = () => {
-  return path.join(__dirname, "../storage/uploads");
-}
-
-
-const moveFileAfterCreation = async (fileName, newPath) => {
-  const fullTempPath = path.join(getTempStoragePath(), fileName);
-  const fullNewPath = path.join(getStorageRootPath(), newPath);
-  await changeFilePath(fullTempPath, fullNewPath)
-}
-
-const getFile = async (filePath, rootPath=getStorageRootPath()) => {
+const tintMedia = async (color, imageBuffer) => {
   try {
-    const fullFilePath = path.join(rootPath, filePath);
-    const file = await fsPromises.readFile(fullFilePath);
-    
-    return file;
+    const tintedImage = await sharp(imageBuffer).tint(color).toBuffer();
+    return tintedImage;
   } catch (err) {
-    throw new Error(`Error getting file: ${err}`);
-  }
-}
-
-const changeFilePath = async (fullOldPath, fullNewPath) => {
-  try {
-    // attempt to move file
-    await fsPromises.rename(fullOldPath, fullNewPath);
-  } catch (err) {
-    // attempt to copy file to new path then delete original
-    try {
-      const readStream = fs.createReadStream(fullOldPath);
-      const writeStream = fs.createWriteStream(fullNewPath);
-      
-      await pipeline(readStream, writeStream);
-
-      await fsPromises.unlink(fullOldPath);
-    } catch (err) {
-      throw new Error(`Error moving file: ${err}`);
-    }
+    throw new Error(err);
   }
 }
 

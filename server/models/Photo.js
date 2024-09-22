@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const photoSchema = new mongoose.Schema({
-    trip: {type: ObjectId, ref: "Trip", required: true},
+    trip: {type: ObjectId, ref: "Trip"},
     path: {
         type: String,
         required: true,

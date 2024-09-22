@@ -3,17 +3,24 @@ const jwt = require("jsonwebtoken");
 const haversine = require("haversine-distance")
 
 const fileService = require("../services/fileService");
+const renderService = require("../services/renderService");
 
 const User = require("../models/User");
 const Trip = require("../models/Trip");
 const Badge = require("../models/Badge");
 const Photo = require("../models/Photo");
+const ShellGraphic = require("../models/ShellGraphic");
 
 
 const addTrip = asyncHandler(async (req, res) => {
-    const { time, longitude, latitude } = req.body;
+    const user = req.user;
+    const { time, longitude, latitude, shell, color } = req.body;
     const photos = req.files;
-    let major, shellGraphic, shells;
+    let major, shells;
+    const shellGraphic = await ShellGraphic.create({
+        shell,
+        color,
+    });
     
     // all fields required
     if (!time||!longitude||!latitude) {
@@ -22,6 +29,7 @@ const addTrip = asyncHandler(async (req, res) => {
     }
 
     let photoFiles = [];
+    let photoPaths = [];
     for (let i in photos) {
         let photo = photos[i];
         console.log(photo, "/photos/" + photo)
@@ -29,10 +37,16 @@ const addTrip = asyncHandler(async (req, res) => {
         let photoFile = await getFile("/photos/" + photo)
         if (photoFile) {
             photoFiles.push(photoFile);
+            photoPaths.push("/photos/" + photo);
         }
+        /*
+        IDENTIFY HERE!!!!
+        */
+        const newPhoto = await Photo.create({
+            path: "/photos" + photo,
+        });
     }
 
-    console.log("checkpoint 1");
 
     const badges = [
         {latitude: 41.8351, longitude: 69.9439, name: "Cape Cod"},
@@ -54,6 +68,21 @@ const addTrip = asyncHandler(async (req, res) => {
             break;
         }
     }
+    const newTrip = Trip.create({
+        user,
+        time,
+        longitude,
+        latitude,
+        major,
+        shellGraphic,
+        // array of shells goes here
+        photoPaths,
+    });
+
+    user.
+
+
+
     res.send({major});
 
 

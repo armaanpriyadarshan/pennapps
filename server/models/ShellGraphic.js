@@ -9,12 +9,6 @@ const shellGraphicSchema = new mongoose.Schema({
     }, color: {
         type: Number,
         required: true,
-    }, model: {
-        type: String,
-        required: true,
-    }, icon: {
-        type: String,
-        required: true,
     }
 });
 
