@@ -7,7 +7,7 @@ const renderTintedShells = async (shell, color) => {
 
   const icon_tinted = await tintMedia(color, icon);
   const model_tinted = await tintMedia(color, model);
-  
+
 
 }
 
@@ -21,6 +21,5 @@ const tintMedia = async (color, imageBuffer) => {
 }
 
 module.exports = {
-  moveFileAfterCreation,
-  getFile,
+  renderTintedShells
 }
