@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, View, Text, Image, StyleSheet, Pressable, TouchableWithoutFeedback } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Marker } from 'react-native-maps';
+import { useFonts, Coustard_400Regular } from '@expo-google-fonts/dev';
 
 interface BeachMarkerProps {
     badge: any;
@@ -12,8 +13,11 @@ interface BeachMarkerProps {
 }
 
 const BeachMarker: React.FC<BeachMarkerProps> = ({ badge, name, latitude, longitude, description }) => {
-    const [modalVisible, setModalVisible] = useState(false);
+    let [fontsLoaded] = useFonts({
+        Coustard_400Regular,
+    });
 
+    const [modalVisible, setModalVisible] = useState(false);
     const hideModal = () => setModalVisible(false);
 
     return (
@@ -36,8 +40,8 @@ const BeachMarker: React.FC<BeachMarkerProps> = ({ badge, name, latitude, longit
                         <MaterialIcons name='close' color='#071a2b' size={30} />
                     </Pressable>
                     <Image source={badge} style={styles.badge} />
-                    <Text>{name}</Text>
-                    <Text>{description}</Text>
+                    <Text style={styles.name}>{name}</Text>
+                    <Text style={styles.description}>{description}</Text>
                 </View>
             </Modal>
         </View>
@@ -50,9 +54,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#ffffff',
         marginTop: '50%',
+        marginHorizontal: 20,
         paddingVertical: '10%',
-        paddingHorizontal: '5%',
-        gap: 10,
+        paddingHorizontal: 20,
+        gap: 20,
         borderRadius: 10,
     },
 
@@ -63,8 +68,21 @@ const styles = StyleSheet.create({
     },
 
     badge: {
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
+        resizeMode: 'contain',
+    },
+
+    name: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#071a2b',
+        fontFamily: 'Coustard_400Regular',
+    },
+
+    description: {
+        fontSize: 16,
+        color: '#071a2b',
     }
 });
 
