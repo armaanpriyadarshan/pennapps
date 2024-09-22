@@ -1,15 +1,16 @@
-import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import LogIn from './login';
+import SignUp from './signup';
 import Map from './map';
 import Profile from './profile';
 import Trip from './trip'
-import  { MaterialCommunityIcons, Entypo, FontAwesome } from '@expo/vector-icons';
+import  { MaterialCommunityIcons, MaterialIcons, Entypo, FontAwesome } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
 const Index = () => {
   return (
-    <Tab.Navigator initialRouteName='Home'
+    <Tab.Navigator initialRouteName='Map'
       screenOptions={{
         tabBarStyle: {
           paddingBottom: 0,
@@ -60,5 +61,3 @@ const Index = () => {
 }
 
 export default Index;
-
-const styles = StyleSheet.create({});
