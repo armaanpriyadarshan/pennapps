@@ -7,6 +7,7 @@ const fileService = require("../services/fileService");
 const User = require("../models/User");
 const Trip = require("../models/Trip");
 const Badge = require("../models/Badge");
+const Photo = require("../models/Photo");
 
 
 const addTrip = asyncHandler(async (req, res) => {
@@ -21,7 +22,8 @@ const addTrip = asyncHandler(async (req, res) => {
     }
 
     let photoFiles = [];
-    for (let photo in photos) {
+    for (let i in photos) {
+        let photo = photos[i];
         console.log(photo, "/photos/" + photo)
         await fileService.moveFileAfterCreation(photo, "/photos/" + photo);
         let photoFile = await getFile("/photos/" + photo)
@@ -43,7 +45,8 @@ const addTrip = asyncHandler(async (req, res) => {
         {latitude: 42.932, longitude: 70.7981, name: "Hampton Beach State Park"}
     ];
 
-    for (let badge in badges) {
+    for (let i in badges) {
+        let badge = badges[i];
         let badgeCoord = {latitude: badge.latitude, longitude: badge.longitude};
         let tripCoord = {latitude: latitude, longitude: longitude};
         if (haversine(badgeCoord, tripCoord) <= 7500) {
