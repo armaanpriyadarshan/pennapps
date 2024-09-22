@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Map from './map';
-import Home from './home';
 import Profile from './profile';
+import Trip from './trip'
 import  { MaterialCommunityIcons, Entypo, FontAwesome } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -39,7 +39,7 @@ const Index = () => {
       />
       <Tab.Screen 
         name='Home' 
-        component={Home}
+        component={Trip}
         options={{
           tabBarIcon: ({ focused }) => (
             <Entypo name="plus" color={focused ? '#ffffff' : '071A2B'} size={32} />
