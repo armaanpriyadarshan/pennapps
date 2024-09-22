@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { ImageBackground, View, Text, TextInput, Pressable, TouchableWithoutFeedback, Keyboard, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '@/contexts/AuthContext';
+import { signUp } from '@/api';
 import { useFonts, Coustard_400Regular } from '@expo-google-fonts/dev';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -10,33 +13,57 @@ const SignUp = () => {
 
     const navigation = useNavigation();
 
+    const { logIn } = useAuth();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSignUp = async () => {
+        try {
+            await signUp(name, email, password);
+            navigation.navigate('Log In');
+        } catch (err) {
+            setError('Registration failed. Please try again.');
+            console.error(err);
+        }
+    };
+
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <ImageBackground source={require('../assets/images/background.png')} resizeMode='cover' style={styles.background}>
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <MaterialIcons name='arrow-back' size={24} color='#071a2b' style={styles.arrow} onPress={() => navigation.navigate('Map')} />
+                        <MaterialIcons name='arrow-back' size={24} color='#071a2b' style={styles.arrow} onPress={() => navigation.goBack()} />
                         <Text style={styles.title}>Sign Up</Text>
                     </View>
                     <View>
                         <Text>Name</Text>
                         <TextInput 
                             style={styles.input}
+                            value={name}
+                            onChangeText={setName}
                         />
                         <Text>Email</Text>
                         <TextInput 
                             style={styles.input}
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
                         />
                         <Text>Password</Text>
                         <TextInput 
                             style={styles.input}
+                            value={password}
+                            onChangeText={setPassword}
                         />
                     </View>
                     <View style={styles.submit}>
-                        <Pressable style={styles.button}>
+                        <Pressable style={styles.button} onPress={handleSignUp}>
                             <Text style={styles.buttonText}>Sign Up</Text>
                         </Pressable>
-                        <Text>Already have an account? Log In</Text>
+                        <Text>Already have an account? <Text style={{ color: '#00a3ff' }} onPress={() => navigation.navigate('Log In')}>Log In</Text></Text>
                     </View>
                 </View>
             </ImageBackground>

@@ -22,8 +22,6 @@ app.use(express.json());
 
 const initialize = async () => {
   await connectMongoDB();
-
-
   app.use("/api", api);
 
   app.listen(port, () => {

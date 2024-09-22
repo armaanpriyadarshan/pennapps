@@ -6,10 +6,10 @@ const User = require("../models/User");
 
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, passwordConfirm } = req.body;
+  const { name, email, password } = req.body;
   
   // all fields required
-  if (!name||!email||!password||!passwordConfirm) {
+  if (!name||!email||!password) {
     res.status(400);
     throw new Error("Missing fields.");
   }
@@ -30,9 +30,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (newUser) {
-
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-
 
     /* return newly created user */
     res.status(201).json({

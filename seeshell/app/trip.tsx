@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, Modal, Button } from 'react-native';
 import ColorPicker, { Panel1, HueSlider } from 'reanimated-color-picker';
+import { useAuth } from '@/contexts/AuthContext';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
@@ -71,7 +72,7 @@ const Trip = () => {
         </Image>
         <View style={styles.profile_text}>
           <Text style={styles.field}>Name</Text>
-          <Text style={styles.value}>Muzu Priyadarshan</Text>
+          <Text style={styles.value}>Armaan Priyadarshan</Text>
           <Text style={styles.field}>Date</Text>
           <Text style={styles.value}>{currentDate()}</Text>
         </View>
