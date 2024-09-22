@@ -68,7 +68,7 @@ const addTrip = asyncHandler(async (req, res) => {
             break;
         }
     }
-    const newTrip = Trip.create({
+    const newTrip = await Trip.create({
         user,
         time,
         longitude,
@@ -79,27 +79,21 @@ const addTrip = asyncHandler(async (req, res) => {
         photoPaths,
     });
 
-    user.
+    user.trips.push(newTrip._id);
+    await user.save();
 
 
-
-    res.send({major});
-
+    res.status(200).send({message: "success"});
 
 
 });
 
 
 const getAllTrips = asyncHandler(async (req, res) => {
-//     // const trips = 
+    const trips = await Trip.find({});
 
-//     res.status(200).json({
-//       token
-//     });
-//   } else {
-//     res.status(401);
-//     throw new Error("Incorrect email or password.");
-    res.send({});
+
+    res.send({trips});
   }
 );
 

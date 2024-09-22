@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     name: {type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, required: true},
-    avatar: {type: String, default: "defaultAvatar.png"},
+    // avatar: {type: String, default: "defaultAvatar.png"},
     trips: {
         type: [{type: ObjectId, ref: "Trip"}],
         default: [],
