@@ -63,9 +63,8 @@ const styles = StyleSheet.create({
     },
 
     badge: {
-        width: 150,
-        height: 153,
-        marginBottom: 10
+        width: 100,
+        height: 100,
     }
 });
 
