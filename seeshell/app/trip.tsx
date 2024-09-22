@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, Modal, Button } from 'react-native';
+import ColorPicker, { Panel1, HueSlider } from 'reanimated-color-picker';
+import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+import { Ionicons } from '@expo/vector-icons';
 import { useFonts, Coustard_400Regular } from '@expo-google-fonts/dev';
 
 const Trip = () => {
@@ -10,6 +13,25 @@ const Trip = () => {
 
   const [location, setLocation] = useState({});
   const [errorMsg, setErrorMsg] = useState('');
+
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [selectedColor, setSelectedColor] = useState('#E6E6E6');
+
+  const [images, setImages] = useState<string[]>([]);
+
+  const pickImages = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const selectedImages = result.assets.map((asset) => asset.uri);
+      setImages(selectedImages);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -29,6 +51,10 @@ const Trip = () => {
       setErrorMsg('Unable to fetch location');
       console.log(error);
     }
+  };
+
+  const onSelectColor = (color: { hex: string }) => {
+    setSelectedColor(color.hex);
   };
 
   return (
@@ -63,41 +89,56 @@ const Trip = () => {
           <Text>Shell</Text>
           <View style={styles.shellTypes}>
             <Pressable style={styles.shellType}>
-              <Image source={require('../assets/images/shells/shell1.png')}></Image>
+              <Image style={styles.shell} source={require('../assets/images/shells/shell1.png')}></Image>
             </Pressable>
             <Pressable style={styles.shellType}>
-              <Image source={require('../assets/images/shells/shell2.png')}></Image>
+              <Image style={styles.shell} source={require('../assets/images/shells/shell2.png')}></Image>
             </Pressable>
             <Pressable style={styles.shellType}>
-              <Image source={require('../assets/images/shells/shell3.png')}></Image>
+              <Image style={styles.shell} source={require('../assets/images/shells/shell3.png')}></Image>
             </Pressable>
             <Pressable style={styles.shellType}>
-              <Image source={require('../assets/images/shells/shell4.png')}></Image>
+              <Image style={styles.shell} source={require('../assets/images/shells/shell4.png')}></Image>
             </Pressable>
             <Pressable style={styles.shellType}>
-              <Image source={require('../assets/images/shells/shell5.png')}></Image>
+              <Image style={styles.shell} source={require('../assets/images/shells/shell5.png')}></Image>
             </Pressable>
             <Pressable style={styles.shellType}>
-              <Image source={require('../assets/images/shells/shell6.png')}></Image>
+              <Image style={styles.shell} source={require('../assets/images/shells/shell6.png')}></Image>
             </Pressable>
             <Pressable style={styles.shellType}>
-              <Image source={require('../assets/images/shells/shell7.png')}></Image>
+              <Image style={styles.shell} source={require('../assets/images/shells/shell7.png')}></Image>
             </Pressable>
           </View> 
         </View>
         <View style={styles.colorSelect}>
           <Text>Color</Text>
-
-          <View style={styles.colors}>
-            <Pressable style={[styles.color]}></Pressable>
-          </View>
+          <Pressable style={[styles.color, { backgroundColor: selectedColor }]} onPress={() => setShowColorPicker(true)} />
         </View>
-      </View>
 
-      <Text style={styles.heading}>Photos</Text>
-      <View style={styles.photoSelect}>
-        <Text style={styles.photoSelectText}>+</Text>
+        <Modal transparent visible={showColorPicker} animationType="slide">
+          <View>
+            <ColorPicker style={styles.colorPicker} value={selectedColor} onComplete={onSelectColor}>
+              <Panel1 />
+              <HueSlider />
+            </ColorPicker>
+            <Button title="Ok" onPress={() => setShowColorPicker(false)} />
+          </View>
+      </Modal>
       </View>
+      <Text style={styles.heading}>Photos</Text>
+      {images.length > 0 ? (
+        <View style={styles.photoContainer}>
+          {images.map((uri, index) => (
+            <Image key={index} source={{ uri }} style={styles.thumbnail} />
+          ))}
+          <Ionicons name="checkmark-circle" size={40} color="#071a2b" />
+        </View>
+      ) : (
+        <Pressable style={styles.photoSelect} onPress={() => pickImages()}>
+          <Text style={styles.photoSelectText}>+</Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -197,23 +238,25 @@ const styles = StyleSheet.create({
     },
 
     shellType: {
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#000000",
+      margin: 7,
       width: 36,
       height: 36,
-      borderRadius: 50,
-      backgroundColor: "#000000",
-      margin: 7
+      borderRadius: 18,
     },
 
+    shell: {
+      width: 20,
+      height: 20,
+      borderRadius: 10
+    },
+    
     colorSelect: {
       flexDirection: "column",
       alignItems: "stretch",
       justifyContent: "center",
-    },
-
-    colors: {
-      flexDirection: "row",
-      justifyContent: "center",
-      flexWrap: "wrap"
     },
 
     color: {
@@ -226,6 +269,10 @@ const styles = StyleSheet.create({
       marginRight: 13,
       borderColor: "black",
       borderWidth: 0.5
+    },
+
+    colorPicker: {
+      marginTop: '60%',
     },
 
     photoSelect: {
@@ -241,6 +288,20 @@ const styles = StyleSheet.create({
       color: "#BBBBBB",
       fontSize: 70,
       textAlign: "center"
+    },
+
+    photoContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: 8,
+    },
+
+    thumbnail: {
+      width: 60,
+      height: 60,
+      borderRadius: 5,
+      margin: 5
     }
   });
 
