@@ -1,10 +1,40 @@
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, Pressable, Alert } from 'react-native';
+import * as Location from 'expo-location';
+import { useFonts, Coustard_400Regular } from '@expo-google-fonts/dev';
 
 const Trip = () => {
+  let [fontsLoaded] = useFonts({
+      Coustard_400Regular
+  });
+
+  const [location, setLocation] = useState({});
+  const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+    })();
+  }, []);
+
+  const getCurrentLocation = async () => {
+    try {
+      let { coords } = await Location.getCurrentPositionAsync({});
+      setLocation(coords);
+    } catch (error) {
+      setErrorMsg('Unable to fetch location');
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={[styles.title, styles.section]}>
-        <Text style={styles.heading}>New Trip</Text>
+        <Text style={styles.trip}>New Trip</Text>
       </View>
       <View style={[styles.profile_info, styles.section]}>
         <Image 
@@ -14,16 +44,16 @@ const Trip = () => {
           }}>
         </Image>
         <View style={styles.profile_text}>
-          <Text style={styles.heading}>Name</Text>
-          <Text>Muzu Priyadarshan</Text>
-          <Text style={styles.heading}>Date</Text>
-          <Text>{currentDate()}</Text>
+          <Text style={styles.field}>Name</Text>
+          <Text style={styles.value}>Muzu Priyadarshan</Text>
+          <Text style={styles.field}>Date</Text>
+          <Text style={styles.value}>{currentDate()}</Text>
         </View>
       </View>
 
       <View style={[styles.location_section, styles.section]}>
         <Text style={styles.heading}>Location</Text>
-        <Pressable style={styles.location_button}><Text style={styles.location_button_text}>Use Current Location</Text></Pressable>
+        <Pressable style={styles.location_button}><Text style={styles.location_button_text} onPress={getCurrentLocation}>Use Current Location</Text></Pressable>
       </View>
       
       <Text style={styles.heading}>Icon</Text>
@@ -31,32 +61,34 @@ const Trip = () => {
 
         <View style={styles.shellSelect}>
           <Text>Shell</Text>
-
           <View style={styles.shellTypes}>
-            <Pressable style={styles.shellType}></Pressable>
-            <Pressable style={styles.shellType}></Pressable>
-            <Pressable style={styles.shellType}></Pressable>
-            <Pressable style={styles.shellType}></Pressable>
-            <Pressable style={styles.shellType}></Pressable>
-            <Pressable style={styles.shellType}></Pressable>
-            <Pressable style={styles.shellType}></Pressable>
+            <Pressable style={styles.shellType}>
+              <Image source={require('../assets/images/shells/shell1.png')}></Image>
+            </Pressable>
+            <Pressable style={styles.shellType}>
+              <Image source={require('../assets/images/shells/shell2.png')}></Image>
+            </Pressable>
+            <Pressable style={styles.shellType}>
+              <Image source={require('../assets/images/shells/shell3.png')}></Image>
+            </Pressable>
+            <Pressable style={styles.shellType}>
+              <Image source={require('../assets/images/shells/shell4.png')}></Image>
+            </Pressable>
+            <Pressable style={styles.shellType}>
+              <Image source={require('../assets/images/shells/shell5.png')}></Image>
+            </Pressable>
+            <Pressable style={styles.shellType}>
+              <Image source={require('../assets/images/shells/shell6.png')}></Image>
+            </Pressable>
+            <Pressable style={styles.shellType}>
+              <Image source={require('../assets/images/shells/shell7.png')}></Image>
+            </Pressable>
           </View> 
         </View>
         <View style={styles.colorSelect}>
           <Text>Color</Text>
 
           <View style={styles.colors}>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
-            <Pressable style={[styles.color]}></Pressable>
             <Pressable style={[styles.color]}></Pressable>
           </View>
         </View>
@@ -90,20 +122,39 @@ const styles = StyleSheet.create({
       alignItems: "center",
     },
 
+    trip: {
+      fontFamily: "Coustard_400Regular",
+      fontSize: 24,
+      color: "#071A2B"
+    },
+
     heading: {
       fontWeight: "bold",
-      fontSize: 18
+      fontSize: 18,
     },
 
     profile_info: {
       flexDirection: "row",
+      alignItems: "center",
       justifyContent: "space-evenly"
     },
 
     profile_image: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      transform: [{rotate: '45deg'}],
+    },
+
+    field: {
+      fontWeight: "bold",
+      fontSize: 13,
+      marginTop: 10
+    },
+
+    value: {
+      fontSize: 16,
+      marginBottom: 10
     },
 
     profile_text: {
@@ -130,7 +181,8 @@ const styles = StyleSheet.create({
     icon_customize: {
       flexDirection: "column",
       alignContent: "stretch",
-      padding: 5
+      padding: 5,
+      gap: 20
     },
 
     shellSelect: {
